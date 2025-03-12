@@ -627,4 +627,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Then initialize the questionnaire
     const questionnaire = new Questionnaire(questionnaireConfig);
+  window.q = questionnaire;
+
 });
