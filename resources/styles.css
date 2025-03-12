@@ -1,0 +1,220 @@
+/* Base Styles */
+:root {
+    --primary-color: #4a6da7;
+    --primary-hover: #3a5a8f;
+    --secondary-color: #e9ecef;
+    --text-color: #333;
+    --light-text: #666;
+    --border-color: #ddd;
+    --success-color: #28a745;
+    --transition-speed: 0.3s;
+    --font-family: 'HebrewFont', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family);
+}
+
+body {
+    background-color: #f8f9fa;
+    color: var(--text-color);
+    line-height: 1.6;
+    direction: rtl;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    min-height: 450px;
+    position: relative;
+}
+
+/* Screen Management */
+.screen {
+    display: none;
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease-in-out;
+    padding: 20px;
+}
+
+.screen.active {
+    display: block;
+    opacity: 1;
+    animation: fadeIn var(--transition-speed);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Welcome Screen */
+.instructions {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: var(--secondary-color);
+    border-radius: 5px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Button Styles */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color var(--transition-speed);
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+.btn:hover {
+    background-color: #d0d4d9;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Question Screen */
+.progress-container {
+    height: 8px;
+    background-color: var(--secondary-color);
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    width: 0;
+    transition: width var(--transition-speed) ease-in-out;
+}
+
+.question-number {
+    text-align: center;
+    margin-bottom: 10px;
+    color: var(--light-text);
+}
+
+.question-text {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.option {
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+    text-align: center;
+}
+
+.option:hover {
+    background-color: var(--secondary-color);
+}
+
+.option.selected {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Results Screen */
+.results-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.score-display {
+    margin: 30px 0;
+}
+
+.final-score {
+    font-size: 48px;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 15px 0;
+}
+
+.results-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+        width: 95%;
+    }
+    
+    .question-text {
+        font-size: 18px;
+    }
+    
+    .option {
+        padding: 12px;
+    }
+    
+    .results-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
