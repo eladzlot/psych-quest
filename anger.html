@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>שאלון חרדה חברתית</title>
+    <title>שאלון תגובות כעס</title>
     <link rel="stylesheet" href="resources/styles.css">
     <!-- Hebrew font loading -->
     <style id="dynamic-font-style">
@@ -34,7 +34,7 @@
                 <div id="progress-bar" class="progress-bar"></div>
             </div>
             <div class="question-number">
-                <span id="current-question">1</span> מתוך <span id="total-questions">10</span>
+                <span id="current-question">1</span> מתוך <span id="total-questions">7</span>
             </div>
             <div id="question-text" class="question-text"></div>
             <div id="options-container" class="options-container"></div>
@@ -70,13 +70,13 @@
     <!-- Questionnaire Configuration -->
     <script>
 /**
- * SPIN Social Phobia Inventory questionnaire configuration
- * This object defines all aspects of the SPIN questionnaire
+ * DAR - Dimensions of Anger Reactions questionnaire configuration
+ * This object defines all aspects of the DAR questionnaire
  */
 const questionnaireConfig = {
     // Basic questionnaire information
-    title: "SPIN - שאלון חרדה חברתית",
-    instructions: "אנא ציינו באיזו מידה הטרידו אתכם הבעיות הבאות במהלך השבוע האחרון",
+    title: "DAR - שאלון תגובות כעס",
+    instructions: "כמיטב יכולתך, רשום/רשמי את המידה בה האמירות שלפניך מתארים את תחושותיך והתנהגותך. דרג/י עד כמה כל אמירה מתאימה לך בין 0 (בכלל לא) ל-4 (מתאים מאד).",
     
     // Styling configuration
     fontFamily: 'HebrewFont', // Default Hebrew font, can be changed
@@ -85,7 +85,7 @@ const questionnaireConfig = {
     // Scoring configuration
     scoringBase: 0,  // 0-based scoring (0-4)
     
-    // Response options for the SPIN scale
+    // Response options for the DAR scale
     responseOptions: [
         { value: 0, label: "בכלל לא" },
         { value: 1, label: "במידה מעטה" },
@@ -98,87 +98,37 @@ const questionnaireConfig = {
     questions: [
         {
             id: "q1",
-            text: "אני מפחד/ת מאנשים בעלי סמכות.",
+            text: "לעיתים קרובות אני מוצא/ת את עצמי כועס/ת על אנשים או מצבים מסויימים.",
             reverseScore: false
         },
         {
             id: "q2",
-            text: "אני מוטרד/ת מהסמקה בפני אנשים.",
+            text: "כאשר אני כועס/ת, אני ממש זועמ/ת.",
             reverseScore: false
         },
         {
             id: "q3",
-            text: "מסיבות ואירועים חברתיים מפחידים אותי.",
+            text: "כאשר אני כועס/ת, אני נשאר/ת כועס/ת.",
             reverseScore: false
         },
         {
             id: "q4",
-            text: "אני נמנע/ת מלדבר עם אנשים שאני לא מכיר/ה.",
+            text: "כאשר אני כועס/ת על מישהו, אני רוצה להכות אותו או לפגוע בו.",
             reverseScore: false
         },
         {
             id: "q5",
-            text: "מפחיד אותי להיות תחת ביקורת.",
+            text: "הכעס שלי פוגע ביכולת שלי לתפקד ולהשיג תוצאות.",
             reverseScore: false
         },
         {
             id: "q6",
-            text: "הפחד ממבוכה גורם לי להימנע מלעשות דברים או לדבר עם אנשים.",
+            text: "הכעס שלי מפריע לי להסתדר עם אנשים כמו שהייתי רוצה.",
             reverseScore: false
         },
         {
             id: "q7",
-            text: "להזיע מול אנשים גורם לי מצוקה.",
-            reverseScore: false
-        },
-        {
-            id: "q8",
-            text: "אני נמנע/ת מללכת למסיבות.",
-            reverseScore: false
-        },
-        {
-            id: "q9",
-            text: "אני נמנע/ת מפעילויות שבהן אני במרכז תשומת לב.",
-            reverseScore: false
-        },
-        {
-            id: "q10",
-            text: "מפחיד אותי לדבר עם זרים.",
-            reverseScore: false
-        },
-        {
-            id: "q11",
-            text: "אני נמנע/ת מלתת נאום.",
-            reverseScore: false
-        },
-        {
-            id: "q12",
-            text: "אני מוכן/ה לעשות כל דבר כדי למנוע ביקורת.",
-            reverseScore: false
-        },
-        {
-            id: "q13",
-            text: "דפיקות לב מפריעות לי כאשר אני ליד אנשים.",
-            reverseScore: false
-        },
-        {
-            id: "q14",
-            text: "אני מפחד/ת לעשות דברים כאשר אנשים עלולים לראות אותי.",
-            reverseScore: false
-        },
-        {
-            id: "q15",
-            text: "להיות נבוך/ה או להראות טיפשי/ת הם בין הפחדים הגרועים ביותר שלי.",
-            reverseScore: false
-        },
-        {
-            id: "q16",
-            text: "אני נמנע/ת מלדבר עם כל אדם בעל סמכות.",
-            reverseScore: false
-        },
-        {
-            id: "q17",
-            text: "לרעוד מול אנשים זה דבר שגורם לי מצוקה.",
+            text: "הכעס שלי משפיע לרעה על בריאותי.",
             reverseScore: false
         }
     ]

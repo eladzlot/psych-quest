@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>שאלון חרדה חברתית</title>
+    <title>שאלון OCI-R</title>
     <link rel="stylesheet" href="resources/styles.css">
     <!-- Hebrew font loading -->
     <style id="dynamic-font-style">
@@ -70,13 +70,13 @@
     <!-- Questionnaire Configuration -->
     <script>
 /**
- * SPIN Social Phobia Inventory questionnaire configuration
- * This object defines all aspects of the SPIN questionnaire
+ * OCI-R Obsessive-Compulsive Inventory - Revised questionnaire configuration
+ * This object defines all aspects of the OCI-R questionnaire
  */
 const questionnaireConfig = {
     // Basic questionnaire information
-    title: "SPIN - שאלון חרדה חברתית",
-    instructions: "אנא ציינו באיזו מידה הטרידו אתכם הבעיות הבאות במהלך השבוע האחרון",
+    title: "OCI-R - שאלון טורדנות-כפייתיות",
+    instructions: "האמירות הבאות מתייחסות לחוויות שיש לאנשים רבים בחייהם היומיומיים. לגבי כל אחת מהאמירות הבאות, ציין עד כמה כל אחת מהחוויות הללו גרמה לך סבל או הטרידה אותך במשך החודש האחרון.",
     
     // Styling configuration
     fontFamily: 'HebrewFont', // Default Hebrew font, can be changed
@@ -85,100 +85,105 @@ const questionnaireConfig = {
     // Scoring configuration
     scoringBase: 0,  // 0-based scoring (0-4)
     
-    // Response options for the SPIN scale
+    // Response options for the OCI-R scale
     responseOptions: [
         { value: 0, label: "בכלל לא" },
         { value: 1, label: "במידה מעטה" },
-        { value: 2, label: "במידה בינונית" },
+        { value: 2, label: "במידת מה" },
         { value: 3, label: "במידה רבה" },
-        { value: 4, label: "במידה רבה מאד" }
+        { value: 4, label: "באופן קיצוני" }
     ],
     
     // Questions array - each question has unique ID, text, and reverseScore flag
     questions: [
         {
             id: "q1",
-            text: "אני מפחד/ת מאנשים בעלי סמכות.",
+            text: "אגרתי כל כך הרבה דברים שהם מפריעים לי.",
             reverseScore: false
         },
         {
             id: "q2",
-            text: "אני מוטרד/ת מהסמקה בפני אנשים.",
+            text: "לעיתים קרובות אני בודק דברים יותר ממה שנחוץ.",
             reverseScore: false
         },
         {
             id: "q3",
-            text: "מסיבות ואירועים חברתיים מפחידים אותי.",
+            text: "אני נעשה מוטרד או מתרגז כאשר דברים אינם מסודרים כיאות.",
             reverseScore: false
         },
         {
             id: "q4",
-            text: "אני נמנע/ת מלדבר עם אנשים שאני לא מכיר/ה.",
+            text: "אני חש צורך לספור כאשר אני עושה דברים מסוימים.",
             reverseScore: false
         },
         {
             id: "q5",
-            text: "מפחיד אותי להיות תחת ביקורת.",
+            text: "קשה לי לגעת במשהו כאשר אני יודע שנגעו בו זרים או אנשים מסוימים.",
             reverseScore: false
         },
         {
             id: "q6",
-            text: "הפחד ממבוכה גורם לי להימנע מלעשות דברים או לדבר עם אנשים.",
+            text: "אני מתקשה לשלוט במחשבות שלי.",
             reverseScore: false
         },
         {
             id: "q7",
-            text: "להזיע מול אנשים גורם לי מצוקה.",
+            text: "אני אוסף דברים שאין לי צורך בהם.",
             reverseScore: false
         },
         {
             id: "q8",
-            text: "אני נמנע/ת מללכת למסיבות.",
+            text: "אני בודק שוב ושוב דלתות, חלונות, מגירות וכו'.",
             reverseScore: false
         },
         {
             id: "q9",
-            text: "אני נמנע/ת מפעילויות שבהן אני במרכז תשומת לב.",
+            text: "אני נהיה מוטרד או עצבני אם משנים את הצורה בה סידרתי דברים.",
             reverseScore: false
         },
         {
             id: "q10",
-            text: "מפחיד אותי לדבר עם זרים.",
+            text: "אני חש צורך לחזור על מספרים מסוימים.",
             reverseScore: false
         },
         {
             id: "q11",
-            text: "אני נמנע/ת מלתת נאום.",
+            text: "לפעמים אני חייב לשטוף או לנקות את עצמי רק בגלל שאני חש מזוהם.",
             reverseScore: false
         },
         {
             id: "q12",
-            text: "אני מוכן/ה לעשות כל דבר כדי למנוע ביקורת.",
+            text: "אני מוטרד על ידי מחשבות בלתי נעימות שבאות בניגוד לרצוני.",
             reverseScore: false
         },
         {
             id: "q13",
-            text: "דפיקות לב מפריעות לי כאשר אני ליד אנשים.",
+            text: "אני נמנע מלזרוק דברים כיוון שאני חושש שאזדקק להם בהמשך.",
             reverseScore: false
         },
         {
             id: "q14",
-            text: "אני מפחד/ת לעשות דברים כאשר אנשים עלולים לראות אותי.",
+            text: "אני בודק ברזי גז ומים שוב ושוב ומדליק אורות לאחר שכיביתי אותם.",
             reverseScore: false
         },
         {
             id: "q15",
-            text: "להיות נבוך/ה או להראות טיפשי/ת הם בין הפחדים הגרועים ביותר שלי.",
+            text: "אני צריך שדברים יהיו מסודרים בסדר מסוים.",
             reverseScore: false
         },
         {
             id: "q16",
-            text: "אני נמנע/ת מלדבר עם כל אדם בעל סמכות.",
+            text: "אני מרגיש שישנם מספרים טובים ומספרים רעים.",
             reverseScore: false
         },
         {
             id: "q17",
-            text: "לרעוד מול אנשים זה דבר שגורם לי מצוקה.",
+            text: "אני שוטף את ידי לעיתים תכופות ובאופן ממושך יותר מהנחוץ.",
+            reverseScore: false
+        },
+        {
+            id: "q18",
+            text: "אני חווה לעיתים קרובות מחשבות בלתי נעימות ויש לי קושי להיפטר מהן.",
             reverseScore: false
         }
     ]

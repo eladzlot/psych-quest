@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>שאלון חרדה חברתית</title>
+    <title>שאלון PCL-5</title>
     <link rel="stylesheet" href="resources/styles.css">
     <!-- Hebrew font loading -->
     <style id="dynamic-font-style">
@@ -70,13 +70,13 @@
     <!-- Questionnaire Configuration -->
     <script>
 /**
- * SPIN Social Phobia Inventory questionnaire configuration
- * This object defines all aspects of the SPIN questionnaire
+ * PCL-5 PTSD Checklist for DSM-5 questionnaire configuration
+ * This object defines all aspects of the PCL-5 questionnaire
  */
 const questionnaireConfig = {
     // Basic questionnaire information
-    title: "SPIN - שאלון חרדה חברתית",
-    instructions: "אנא ציינו באיזו מידה הטרידו אתכם הבעיות הבאות במהלך השבוע האחרון",
+    title: "PCL-5 - שאלון לאבחון דחק פוסט-טראומטי",
+    instructions: "להלן רשימה של בעיות ותופעות מהן סובלים לעיתים אנשים בתגובה לאירועי חיים מלחיצים. אנא קרא/י בתשומת לב כל שורה, והקף/י בעיגול את אחת הספרות שמשמאל כדי לציין באיזו מידה הפריע לך בעיה זו בחודש האחרון.",
     
     // Styling configuration
     fontFamily: 'HebrewFont', // Default Hebrew font, can be changed
@@ -85,100 +85,115 @@ const questionnaireConfig = {
     // Scoring configuration
     scoringBase: 0,  // 0-based scoring (0-4)
     
-    // Response options for the SPIN scale
+    // Response options for the PCL-5 scale
     responseOptions: [
-        { value: 0, label: "בכלל לא" },
-        { value: 1, label: "במידה מעטה" },
-        { value: 2, label: "במידה בינונית" },
+        { value: 0, label: "כלל לא" },
+        { value: 1, label: "במידה מועטה" },
+        { value: 2, label: "באופן בינוני" },
         { value: 3, label: "במידה רבה" },
-        { value: 4, label: "במידה רבה מאד" }
+        { value: 4, label: "באופן קיצוני" }
     ],
     
     // Questions array - each question has unique ID, text, and reverseScore flag
     questions: [
         {
             id: "q1",
-            text: "אני מפחד/ת מאנשים בעלי סמכות.",
+            text: "זיכרונות טורדניים, חוזרים ולא רצויים של החוויה הטראומטית?",
             reverseScore: false
         },
         {
             id: "q2",
-            text: "אני מוטרד/ת מהסמקה בפני אנשים.",
+            text: "חלומות טורדניים, חוזרים של החוויה הטראומטית?",
             reverseScore: false
         },
         {
             id: "q3",
-            text: "מסיבות ואירועים חברתיים מפחידים אותי.",
+            text: "הרגשה או התנהגות פתאומית כאילו החוויה הטראומטית ממש שבה ומתרחשת שוב (כאילו את/ה ממש חי/ה אותו שוב)?",
             reverseScore: false
         },
         {
             id: "q4",
-            text: "אני נמנע/ת מלדבר עם אנשים שאני לא מכיר/ה.",
+            text: "הרגשת מצוקה כאשר משהו הזכיר לך את החוויה הטראומטית?",
             reverseScore: false
         },
         {
             id: "q5",
-            text: "מפחיד אותי להיות תחת ביקורת.",
+            text: "תגובות גופניות חזקות כאשר משהו הזכיר לך את החוויה הטראומטית (למשל, דפיקות לב, קשיי נשימה, הזעה)?",
             reverseScore: false
         },
         {
             id: "q6",
-            text: "הפחד ממבוכה גורם לי להימנע מלעשות דברים או לדבר עם אנשים.",
+            text: "הימנעות ממחשבות, רגשות או תחושות גופניות שהזכירו לך את החוויה הטראומטית, (כלומר גורמים מתוך עצמך ולא גורמים חיצוניים)?",
             reverseScore: false
         },
         {
             id: "q7",
-            text: "להזיע מול אנשים גורם לי מצוקה.",
+            text: "הימנעות מגורמים חיצוניים שהזכירו לך את החוויה הטראומטית (כמו: אנשים, מקומות, שיחות, חפצים, פעילויות או מצבים)?",
             reverseScore: false
         },
         {
             id: "q8",
-            text: "אני נמנע/ת מללכת למסיבות.",
+            text: "קושי לזכור חלקים חשובים מתוך החוויה הטראומטית?",
             reverseScore: false
         },
         {
             id: "q9",
-            text: "אני נמנע/ת מפעילויות שבהן אני במרכז תשומת לב.",
+            text: "אמונות שליליות חזקות על עצמך, או על אנשים אחרים, או על העולם? (למשל, אני אדם רע, משהו ממש לא בסדר איתי, אי אפשר לסמוך על אף אחד, העולם הוא מקום מסוכן לגמרי)",
             reverseScore: false
         },
         {
             id: "q10",
-            text: "מפחיד אותי לדבר עם זרים.",
+            text: "האשמה של עצמך או של מישהו אחר על מה שקרה באירוע או אחריו?",
             reverseScore: false
         },
         {
             id: "q11",
-            text: "אני נמנע/ת מלתת נאום.",
+            text: "רגשות שליליים חזקים כמו פחד או אימה, כעס, אשמה או בושה?",
             reverseScore: false
         },
         {
             id: "q12",
-            text: "אני מוכן/ה לעשות כל דבר כדי למנוע ביקורת.",
+            text: "אובדן עניין בפעילויות מהן נהגת ליהנות?",
             reverseScore: false
         },
         {
             id: "q13",
-            text: "דפיקות לב מפריעות לי כאשר אני ליד אנשים.",
+            text: "תחושה של ריחוק או ניתוק מאנשים אחרים?",
             reverseScore: false
         },
         {
             id: "q14",
-            text: "אני מפחד/ת לעשות דברים כאשר אנשים עלולים לראות אותי.",
+            text: "קושי להרגיש רגשות חיוביים (למשל: אינך מסוגל/ת לחוש רגשות אוהבים כלפי הקרובים אליך או הרגשה של קהות רגשית)?",
             reverseScore: false
         },
         {
             id: "q15",
-            text: "להיות נבוך/ה או להראות טיפשי/ת הם בין הפחדים הגרועים ביותר שלי.",
+            text: "הרגשת עצבנות או כעסנות או התנהגות תוקפנית?",
             reverseScore: false
         },
         {
             id: "q16",
-            text: "אני נמנע/ת מלדבר עם כל אדם בעל סמכות.",
+            text: "לקיחת יותר מידי סיכונים, או עשיית דברים שיכולים להזיק לעצמך?",
             reverseScore: false
         },
         {
             id: "q17",
-            text: "לרעוד מול אנשים זה דבר שגורם לי מצוקה.",
+            text: "תחושה של \"דריכות על\", \"עמידה על המשמר\" או ערנות מוגברת במיוחד?",
+            reverseScore: false
+        },
+        {
+            id: "q18",
+            text: "הרגשה שאתה נוטה להיבהל בקלות או מאוד קופצני?",
+            reverseScore: false
+        },
+        {
+            id: "q19",
+            text: "קשיים בריכוז?",
+            reverseScore: false
+        },
+        {
+            id: "q20",
+            text: "קשיים להירדם או להשארת ישנ/ה?",
             reverseScore: false
         }
     ]

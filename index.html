@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swipe Question Component</title>
+  <style>
+    /* Styles for the swipe question component */
+    .swipe-question-container {
+      font-family: 'Arial', sans-serif;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      height: 300px;
+    }
+    
+    .swipe-card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      padding: 20px;
+      position: absolute;
+      width: calc(100% - 40px);
+      height: calc(100% - 40px);
+      top: 20px;
+      left: 20px;
+      transition: transform 0.3s ease;
+      cursor: grab;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      user-select: none;
+    }
+    
+    .swipe-card:active {
+      cursor: grabbing;
+    }
+    
+    .question-text {
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .swipe-instructions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: auto;
+      color: #888;
+      font-size: 14px;
+    }
+    
+    .swipe-left, .swipe-right {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .swipe-left-text, .swipe-right-text {
+      font-weight: bold;
+    }
+    
+    .result-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .result-left {
+      background-color: rgba(255, 100, 100, 0.8);
+    }
+    
+    .result-right {
+      background-color: rgba(100, 200, 100, 0.8);
+    }
+    
+    .arrow {
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+    }
+    
+    .arrow-left {
+      border-right: 8px solid #888;
+    }
+    
+    .arrow-right {
+      border-left: 8px solid #888;
+    }
+  </style>
+</head>
+<body>
+  <!-- Example usage -->
+  <div id="app"></div>
+
+  <script>
+    class SwipeQuestion extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+        
+        // Default configuration
+        this.config = {
+          question: 'Sample question?',
+          leftOption: 'No',
+          rightOption: 'Yes',
+          onLeftSwipe: () => console.log('Swiped left'),
+          onRightSwipe: () => console.log('Swiped right')
+        };
+        
+        // Touch tracking variables
+        this.touchStartX = 0;
+        this.touchEndX = 0;
+        this.currentTranslateX = 0;
+        this.isDragging = false;
+        this.swipeThreshold = 100; // Minimum distance for a swipe
+      }
+      
+      connectedCallback() {
+        this.render();
+        this.setupEventListeners();
+      }
+      
+      static get observedAttributes() {
+        return ['config'];
+      }
+      
+      attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'config' && newValue) {
+          try {
+            this.updateConfig(JSON.parse(newValue));
+          } catch (e) {
+            console.error('Invalid config format', e);
+          }
+        }
+      }
+      
+      updateConfig(newConfig) {
+        this.config = { ...this.config, ...newConfig };
+        this.render();
+      }
+      
+      render() {
+        const styles = document.createElement('style');
+        styles.textContent = `
+          /* Styles for the swipe question component */
+          .swipe-question-container {
+            font-family: 'Arial', sans-serif;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            height: 300px;
+          }
+          
+          .swipe-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            position: absolute;
+            width: calc(100% - 40px);
+            height: calc(100% - 40px);
+            top: 20px;
+            left: 20px;
+            transition: transform 0.3s ease;
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            user-select: none;
+          }
+          
+          .swipe-card:active {
+            cursor: grabbing;
+          }
+          
+          .question-text {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 40px;
+          }
+          
+          .swipe-instructions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            color: #888;
+            font-size: 14px;
+          }
+          
+          .swipe-left, .swipe-right {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+          }
+          
+          .swipe-left-text, .swipe-right-text {
+            font-weight: bold;
+          }
+          
+          .result-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          }
+          
+          .result-left {
+            background-color: rgba(255, 100, 100, 0.8);
+          }
+          
+          .result-right {
+            background-color: rgba(100, 200, 100, 0.8);
+          }
+          
+          .arrow {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+          }
+          
+          .arrow-left {
+            border-right: 8px solid #888;
+          }
+          
+          .arrow-right {
+            border-left: 8px solid #888;
+          }
+        `;
+        
+        const template = document.createElement('template');
+        template.innerHTML = `
+          <div class="swipe-question-container">
+            <div class="swipe-card">
+              <div class="question-text">${this.config.question}</div>
+              <div class="swipe-instructions">
+                <div class="swipe-left">
+                  <span class="arrow arrow-left"></span>
+                  <span class="swipe-left-text">${this.config.leftOption}</span>
+                </div>
+                <div class="swipe-right">
+                  <span class="swipe-right-text">${this.config.rightOption}</span>
+                  <span class="arrow arrow-right"></span>
+                </div>
+              </div>
+            </div>
+            <div class="result-overlay result-left">${this.config.leftOption}</div>
+            <div class="result-overlay result-right">${this.config.rightOption}</div>
+          </div>
+        `;
+        
+        this.shadowRoot.innerHTML = '';
+        this.shadowRoot.appendChild(styles);
+        this.shadowRoot.appendChild(template.content.cloneNode(true));
+        
+        this.card = this.shadowRoot.querySelector('.swipe-card');
+        this.leftOverlay = this.shadowRoot.querySelector('.result-left');
+        this.rightOverlay = this.shadowRoot.querySelector('.result-right');
+      }
+      
+      setupEventListeners() {
+        // Touch events for mobile
+        this.card.addEventListener('touchstart', this.handleTouchStart.bind(this));
+        this.card.addEventListener('touchmove', this.handleTouchMove.bind(this));
+        this.card.addEventListener('touchend', this.handleTouchEnd.bind(this));
+        
+        // Mouse events for desktop
+        this.card.addEventListener('mousedown', this.handleMouseDown.bind(this));
+        document.addEventListener('mousemove', this.handleMouseMove.bind(this));
+        document.addEventListener('mouseup', this.handleMouseUp.bind(this));
+      }
+      
+      handleTouchStart(e) {
+        this.touchStartX = e.touches[0].clientX;
+        this.isDragging = true;
+      }
+      
+      handleTouchMove(e) {
+        if (!this.isDragging) return;
+        
+        this.touchEndX = e.touches[0].clientX;
+        this.currentTranslateX = this.touchEndX - this.touchStartX;
+        
+        // Apply the movement to the card
+        this.updateCardPosition();
+      }
+      
+      handleTouchEnd() {
+        if (!this.isDragging) return;
+        
+        this.isDragging = false;
+        
+        if (this.currentTranslateX < -this.swipeThreshold) {
+          this.completeSwipe('left');
+        } else if (this.currentTranslateX > this.swipeThreshold) {
+          this.completeSwipe('right');
+        } else {
+          // Reset position if not swiped far enough
+          this.resetCardPosition();
+        }
+      }
+      
+      handleMouseDown(e) {
+        this.touchStartX = e.clientX;
+        this.isDragging = true;
+      }
+      
+      handleMouseMove(e) {
+        if (!this.isDragging) return;
+        
+        this.touchEndX = e.clientX;
+        this.currentTranslateX = this.touchEndX - this.touchStartX;
+        
+        // Apply the movement to the card
+        this.updateCardPosition();
+      }
+      
+      handleMouseUp() {
+        if (!this.isDragging) return;
+        
+        this.isDragging = false;
+        
+        if (this.currentTranslateX < -this.swipeThreshold) {
+          this.completeSwipe('left');
+        } else if (this.currentTranslateX > this.swipeThreshold) {
+          this.completeSwipe('right');
+        } else {
+          // Reset position if not swiped far enough
+          this.resetCardPosition();
+        }
+      }
+      
+      updateCardPosition() {
+        // Apply movement to the card with some resistance for smoother feel
+        const resistance = 0.5;
+        const translation = this.currentTranslateX * resistance;
+        const rotation = translation / 10; // Subtle rotation while swiping
+        
+        this.card.style.transform = `translateX(${translation}px) rotate(${rotation}deg)`;
+        
+        // Show overlay based on swipe direction
+        if (this.currentTranslateX < 0) {
+          this.leftOverlay.style.opacity = Math.min(Math.abs(this.currentTranslateX) / (this.swipeThreshold * 2), 0.8);
+          this.rightOverlay.style.opacity = 0;
+        } else if (this.currentTranslateX > 0) {
+          this.rightOverlay.style.opacity = Math.min(Math.abs(this.currentTranslateX) / (this.swipeThreshold * 2), 0.8);
+          this.leftOverlay.style.opacity = 0;
+        } else {
+          this.leftOverlay.style.opacity = 0;
+          this.rightOverlay.style.opacity = 0;
+        }
+      }
+      
+      resetCardPosition() {
+        this.card.style.transform = 'translateX(0) rotate(0)';
+        this.leftOverlay.style.opacity = 0;
+        this.rightOverlay.style.opacity = 0;
+        this.currentTranslateX = 0;
+      }
+      
+      completeSwipe(direction) {
+        const fullWidth = this.shadowRoot.querySelector('.swipe-question-container').offsetWidth;
+        const targetTranslate = direction === 'left' ? -fullWidth * 1.5 : fullWidth * 1.5;
+        
+        // Animate card off screen
+        this.card.style.transition = 'transform 0.5s ease';
+        this.card.style.transform = `translateX(${targetTranslate}px) rotate(${targetTranslate / 10}deg)`;
+        
+        // Show the appropriate overlay at full opacity
+        if (direction === 'left') {
+          this.leftOverlay.style.opacity = 0.8;
+          this.config.onLeftSwipe();
+        } else {
+          this.rightOverlay.style.opacity = 0.8;
+          this.config.onRightSwipe();
+        }
+        
+        // Reset after animation
+        setTimeout(() => {
+          this.resetCardPosition();
+          this.card.style.transition = 'transform 0.3s ease';
+          setTimeout(() => {
+            this.leftOverlay.style.opacity = 0;
+            this.rightOverlay.style.opacity = 0;
+          }, 300);
+        }, 500);
+      }
+    }
+    
+    // Register the custom element
+    customElements.define('swipe-question', SwipeQuestion);
+    
+    // Example usage
+    document.addEventListener('DOMContentLoaded', () => {
+      const app = document.getElementById('app');
+      
+      // Create instance
+      const swipeQuestion = document.createElement('swipe-question');
+      app.appendChild(swipeQuestion);
+      
+      // Configure with object
+      const config = {
+        question: 'Do you like this component?',
+        leftOption: 'Dislike',
+        rightOption: 'Like',
+        onLeftSwipe: () => console.log('User disliked'),
+        onRightSwipe: () => console.log('User liked')
+      };
+      
+      // Two ways to update config:
+      // 1. Via property
+      swipeQuestion.updateConfig(config);
+      
+      // 2. Via attribute (less recommended for functions)
+      // swipeQuestion.setAttribute('config', JSON.stringify({
+      //   question: 'Do you like this component?',
+      //   leftOption: 'Dislike',
+      //   rightOption: 'Like'
+      // }));
+      
+      // Example of creating another instance programmatically
+      const createNewQuestion = () => {
+        const newQuestion = document.createElement('swipe-question');
+        app.appendChild(newQuestion);
+        
+        newQuestion.updateConfig({
+          question: 'Ready for another question?',
+          leftOption: 'No thanks',
+          rightOption: 'Yes please',
+          onLeftSwipe: () => console.log('User is done'),
+          onRightSwipe: () => console.log('User wants more')
+        });
+      };
+      
+      // Uncomment to create a second question after 3 seconds
+      // setTimeout(createNewQuestion, 3000);
+    });
+  </script>
+</body>
+</html>
