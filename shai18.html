@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שאלון SHAI-18 - חרדת בריאות</title>
+    <link rel="stylesheet" href="resources/styles.css">
+    <!-- Hebrew font loading -->
+    <style id="dynamic-font-style">
+        @font-face {
+            font-family: 'HebrewFont';
+            src: url('resources/FrankRuhlLibre.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <h1 id="questionnaire-title">שאלון</h1>
+            <div id="instructions" class="instructions"></div>
+            <div class="form-group">
+                <label for="user-name">שם/מזהה:</label>
+                <input type="text" id="user-name" required>
+            </div>
+            <button id="start-btn" class="btn btn-primary">התחל</button>
+        </div>
+
+        <!-- Question Screen -->
+        <div id="question-screen" class="screen">
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            <div class="question-number">
+                <span id="current-question">1</span> מתוך <span id="total-questions">18</span>
+            </div>
+            <div id="question-text" class="question-text"></div>
+            <div id="options-container" class="options-container"></div>
+            <div class="navigation">
+                <button id="prev-btn" class="btn">חזור</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen">
+            <h1>תוצאות</h1>
+            <div class="results-container">
+                <div class="score-display">
+                    <h2>הציון הכולל שלך:</h2>
+                    <div id="final-score" class="final-score">0</div>
+                </div>
+                <div class="results-actions">
+                    <button id="export-json-btn" class="btn btn-primary">ייצא כ-JSON</button>
+                    <button id="export-pdf-btn" class="btn">ייצא כ-PDF</button>
+                    <button id="restart-btn" class="btn">התחל מחדש</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jsPDF library for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- html2canvas for rendering HTML to canvas (used with jsPDF) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF-AutoTable plugin for creating tables in PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- Questionnaire Configuration -->
+    <script>
+/**
+ * SHAI-18 - Short Health Anxiety Inventory (18 items) configuration
+ * Modified to use 0-4 scale instead of 4 statements per question
+ */
+const questionnaireConfig = {
+    // Basic questionnaire information
+    title: "SHAI-18 - שאלון חרדת בריאות",
+    instructions: "אנא חשוב/חשבי על החצי שנה האחרונה. לכל שאלה, בחר/י את התשובה המתארת באופן הטוב ביותר את תחושותיך, כאשר 0 מציין 'כלל לא' ו-3 מציין 'במידה רבה מאוד'.",
+    
+    // Styling configuration
+    fontFamily: 'HebrewFont',
+    fontPath: 'resources/FrankRuhlLibre.ttf',
+    
+    // Scoring configuration
+    scoringBase: 0,  // 0-based scoring (0-4)
+    
+    // Response options for the modified SHAI scale
+    responseOptions: [
+        { value: 0, label: "כלל לא" },
+        { value: 1, label: "במידה מעטה" },
+        { value: 2, label: "במידה רבה" },
+        { value: 3, label: "במידה רבה מאוד" }
+    ],
+    
+    // Questions array - each question has unique ID, text, and reverseScore flag
+    questions: [
+        {
+            id: "q1",
+            text: "אני מודאג/ת לגבי הבריאות שלי.",
+            reverseScore: false,
+            subscale: "illness-likelihood"
+        },
+        {
+            id: "q2",
+            text: "אני מבחין/ה בכאבים בגופי יותר מאנשים אחרים בני גילי.",
+            reverseScore: false,
+            subscale: "illness-likelihood"
+        },
+        {
+            id: "q3",
+            text: "אני מודע/ת לתחושות גופניות ושינויים בגופי.",
+            reverseScore: false,
+            subscale: "illness-likelihood"
+        },
+        {
+            id: "q4",
+            text: "אני מתקשה להתנגד למחשבות על מחלה.",
+            reverseScore: false,
+            subscale: "illness-likelihood"
+        },
+        {
+            id: "q5",
+            text: "אני חושש/ת שיש לי מחלה חמורה.",
+            reverseScore: false,
+            subscale: "illness-likelihood"
+        },
+        {
+            id: "q6",
+            text: "אני מדמיין/ת את עצמי חולה.",
+            reverseScore: false,
+            subscale: "illness-likelihood"
+        },
+        {
+            id: "q7",
+            text: "אני מתקשה להסיח את דעתי ממחשבות על בריאותי.",
+            reverseScore: false,
+            subscale: "illness-likelihood"
+        },
+        {
+            id: "q8",
+            text: "אני מודאג/ת גם לאחר שהרופא/ה אומר/ת לי שאין בעיה.",
+            reverseScore: false,
+            subscale: "illness-likelihood"
+        },
+        {
+            id: "q9",
+            text: "כששומע/ת על מחלה, אני חושב/ת שיש לי אותה.",
+            reverseScore: false,
+            subscale: "illness-likelihood"
+        },
+        {
+            id: "q10",
+            text: "כשיש לי תחושה גופנית או שינוי, אני תוהה/ה מה המשמעות של זה.",
+            reverseScore: false,
+            subscale: "illness-likelihood"
+        },
+        {
+            id: "q11",
+            text: "אני מרגיש/ה בסיכון לפתח מחלה חמורה.",
+            reverseScore: false,
+            subscale: "illness-likelihood"
+        },
+        {
+            id: "q12",
+            text: "אני חושב/ת שיש לי מחלה חמורה.",
+            reverseScore: false,
+            subscale: "illness-likelihood"
+        },
+        {
+            id: "q13",
+            text: "כשאני מבחין/ה בתחושה גופנית לא מוסברת, אני מתקשה לחשוב על דברים אחרים.",
+            reverseScore: false,
+            subscale: "illness-likelihood"
+        },
+        {
+            id: "q14",
+            text: "בני משפחתי וחבריי אומרים שאני מודאג/ת מדי לגבי בריאותי.",
+            reverseScore: false,
+            subscale: "illness-likelihood"
+        },
+        {
+            id: "q15",
+            text: "אם הייתי חולה במחלה חמורה, לא הייתי יכול/ה ליהנות מדברים בחיי.",
+            reverseScore: false,
+            subscale: "negative-consequences"
+        },
+        {
+            id: "q16",
+            text: "אם הייתי מפתח/ת מחלה חמורה, הסיכוי שהרפואה המודרנית תוכל לרפא אותי הוא נמוך.",
+            reverseScore: false,
+            subscale: "negative-consequences"
+        },
+        {
+            id: "q17",
+            text: "מחלה חמורה תהרוס היבטים רבים בחיי.",
+            reverseScore: false,
+            subscale: "negative-consequences"
+        },
+        {
+            id: "q18",
+            text: "אם הייתי חולה במחלה חמורה, הייתי מאבד/ת את כבודי.",
+            reverseScore: false,
+            subscale: "negative-consequences"
+        }
+    ],
+    
+    // Score interpretation
+    scoreInterpretation: function(score) {
+        // Maximum possible score is 72 (18 questions x max score of 4)
+        // We'll adjust the thresholds to match the relative proportions of the original scale
+        if (score <= 24) { // ~33% of max score
+            return "חרדת בריאות מינימלית או ללא חרדת בריאות. רמה זו נחשבת תקינה.";
+        } else if (score <= 36) { // ~50% of max score
+            return "חרדת בריאות קלה. ייתכן שיש לך נטייה מסוימת לדאגה בנושאי בריאות.";
+        } else if (score <= 54) { // ~75% of max score
+            return "חרדת בריאות בינונית. הדאגות הבריאותיות עשויות להשפיע על איכות חייך. שקול/י להתייעץ עם איש מקצוע בתחום בריאות הנפש.";
+        } else {
+            return "חרדת בריאות גבוהה. ייתכן שאתה סובל/ת מחרדת בריאות משמעותית. מומלץ להתייעץ עם איש מקצוע בתחום בריאות הנפש.";
+        }
+    }
+};
+    </script>
+    
+    <script src="resources/questionnaire.js"></script>
+</body>
+</html>

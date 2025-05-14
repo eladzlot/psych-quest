@@ -1,9 +1,20 @@
-# Psych questionnaires
+# Psych-Quest: Online Psychological Questionnaires
 
-## 1. Overview
+This repository hosts a collection of psychological self-report questionnaires, designed for easy online completion.
+Each questionnaire is presented on a minimalist HTML page and allows users to **complete the form**, **view their total score**, and **download a PDF summary** of their responses.
+This summary can be shared with a therapist or used for personal reflection.
 
-The Questionnaire Web Application is a responsive single-page application designed for administering Likert-scale questionnaires. The application displays one question at a time, collects user responses, calculates scores, and generates detailed reports. It fully supports right-to-left languages (specifically Hebrew) and provides data export capabilities in multiple formats.
+All questionnaires are implemented client-side — no data is stored or transmitted.
 
-## Here are the questionnaries currently supported:
+## Live Questionnaire Links
 
-[https://github.com/eladzlot/psych-quest/blob/main/spin.html](SPIN) - social anxiety
+| Questionnaire | Description | Link |
+|---------------|-------------|------|
+| **DAR II (Dimensions of anger reactions)** | A brief anger assessment tool for evaluating emotional and behavioral aspects of anger. | [anger.html](https://eladzlot.github.io/psych-quest/anger.html) |
+| **ASI (Anxiety Sensitivity Index)** | Measures fear of anxiety-related symptoms, often used in panic and anxiety disorder contexts. | [asi.html](https://eladzlot.github.io/psych-quest/asi.html) |
+| **OCIR (Obsessive-Compulsive Inventory - Revised)** | Assesses the severity and type of obsessive-compulsive symptoms. | [ocir.html](https://eladzlot.github.io/psych-quest/ocir.html) |
+| **PCL (PTSD Checklist)** | A screening tool for posttraumatic stress disorder symptoms based on DSM criteria. | [pcl.html](https://eladzlot.github.io/psych-quest/pcl.html) |
+| **SHAI-18 (Short Health Anxiety Inventory)** | A validated 18-item measure of health-related anxiety, independent of medical status. | [shai18.html](https://eladzlot.github.io/psych-quest/shai18.html) |
+| **SPIN (Social Phobia Inventory)** | Measures fear, avoidance, and physiological symptoms of social anxiety. | [spin.html](https://eladzlot.github.io/psych-quest/spin.html) |
+| **PHQ-9 (Patient Health Quesionnaire)** | Measures depression. | [phq9.html](https://eladzlot.github.io/psych-quest/phq9.html) |
+

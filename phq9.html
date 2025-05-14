@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שאלון PHQ-9</title>
+    <link rel="stylesheet" href="resources/styles.css">
+    <!-- Hebrew font loading -->
+    <style id="dynamic-font-style">
+        @font-face {
+            font-family: 'HebrewFont';
+            src: url('resources/FrankRuhlLibre.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <h1 id="questionnaire-title">שאלון</h1>
+            <div id="instructions" class="instructions"></div>
+            <div class="form-group">
+                <label for="user-name">שם/מזהה:</label>
+                <input type="text" id="user-name" required>
+            </div>
+            <button id="start-btn" class="btn btn-primary">התחל</button>
+        </div>
+
+        <!-- Question Screen -->
+        <div id="question-screen" class="screen">
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            <div class="question-number">
+                <span id="current-question">1</span> מתוך <span id="total-questions">9</span>
+            </div>
+            <div id="question-text" class="question-text"></div>
+            <div id="options-container" class="options-container"></div>
+            <div class="navigation">
+                <button id="prev-btn" class="btn">חזור</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen">
+            <h1>תוצאות</h1>
+            <div class="results-container">
+                <div class="score-display">
+                    <h2>הציון הכולל שלך:</h2>
+                    <div id="final-score" class="final-score">0</div>
+                </div>
+                <div class="results-actions">
+                    <button id="export-json-btn" class="btn btn-primary">ייצא כ-JSON</button>
+                    <button id="export-pdf-btn" class="btn">ייצא כ-PDF</button>
+                    <button id="restart-btn" class="btn">התחל מחדש</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jsPDF library for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- html2canvas for rendering HTML to canvas (used with jsPDF) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF-AutoTable plugin for creating tables in PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- Questionnaire Configuration -->
+    <script>
+/**
+ * PHQ-9 questionnaire configuration
+ * Only containing the questions text without interpretation
+ */
+const questionnaireConfig = {
+    // Basic questionnaire information
+    title: "PHQ-9 שאלון",
+    instructions: "במהלך השבועיים האחרונים, באיזו תדירות היית מוטרד מכל אחת מהבעיות הבאות:",
+    
+    // Styling configuration
+    fontFamily: 'HebrewFont',
+    fontPath: 'resources/FrankRuhlLibre.ttf',
+    
+    // Scoring configuration
+    scoringBase: 0,  // 0-based scoring (0-3)
+    
+    // Response options for the PHQ-9 scale
+    responseOptions: [
+        { value: 0, label: "כלל לא" },
+        { value: 1, label: "מספר ימים" },
+        { value: 2, label: "יותר ממחצית הימים" },
+        { value: 3, label: "כמעט כל יום" }
+    ],
+    
+    // Questions array - only the text of the questions
+    questions: [
+        {
+            id: "q1",
+            text: "עניין או הנאה מועטים מעשיית דברים",
+            reverseScore: false
+        },
+        {
+            id: "q2",
+            text: "תחושת דיכאון, דיכאון או חוסר תקווה",
+            reverseScore: false
+        },
+        {
+            id: "q3",
+            text: "קשיים בהירדמות, או בשינה רציפה, או עודף שינה",
+            reverseScore: false
+        },
+        {
+            id: "q4",
+            text: "תחושה של עייפות או אנרגיה מועטה",
+            reverseScore: false
+        },
+        {
+            id: "q5",
+            text: "תיאבון מוגזם או אכילת יתר",
+            reverseScore: false
+        },
+        {
+            id: "q6",
+            text: "מרגיש רע לגבי עצמך — מרגיש שאתה כישלון או שאכזבת את עצמך או את משפחתך",
+            reverseScore: false
+        },
+        {
+            id: "q7",
+            text: "קושי להתרכז בדברים, כמו קריאת עיתון או צפייה בטלוויזיה",
+            reverseScore: false
+        },
+        {
+            id: "q8",
+            text: "היית מדבר או נע באיטיות עד כדי כך שאחרים הבחינו בכך. או להפך היית חסר שקט ותנועה כך שהיית צריך להסתובב יותר מהרגיל",
+            reverseScore: false
+        },
+        {
+            id: "q9",
+            text: "מחשבות שהיה עדיף לו היית מת או מחשבות על פגיעה בעצמך בדרך כל שהיא",
+            reverseScore: false
+        }
+    ],
+    
+    // Additional functional impact question
+    functionalImpactQuestion: "אם סימנת בעיות כלשהן, אנא סמן עד כמה בעיות אלו הקשו עליך לבצע את עבודתך, לטפל בדברים בבית או להסתדר עם אנשים אחרים?"
+};
+    </script>
+    
+    <script src="resources/questionnaire.js"></script>
+</body>
+</html>
