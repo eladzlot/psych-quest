@@ -219,3 +219,20 @@ body {
     }
 }
 #export-json-btn {display:none}
+
+.therapist-message {
+    background-color: #f8f9fa;        /* Light gray background */
+    border: 1px solid #4682b4;        /* Steel blue border */
+    border-right: 5px solid #4682b4;  /* Thicker accent border on right (RTL layout) */
+    padding: 15px;                    /* Internal spacing */
+    margin: 20px 0;                   /* Vertical spacing from other elements */
+    border-radius: 5px;               /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+.therapist-message p {
+    margin: 0;                        /* Remove paragraph margin */
+    font-size: 1.1em;                 /* Slightly larger text */
+    color: #333;                      /* Dark gray text */
+    line-height: 1.5;                 /* Improved readability */
+}
