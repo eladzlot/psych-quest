@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שאלון MGH לתלישת שיער</title>
+    <link rel="stylesheet" href="resources/styles.css">
+    <!-- Hebrew font loading -->
+    <style id="dynamic-font-style">
+        @font-face {
+            font-family: 'HebrewFont';
+            src: url('resources/FrankRuhlLibre.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <h1 id="questionnaire-title">שאלון</h1>
+            <div id="instructions" class="instructions"></div>
+            <div class="form-group">
+                <label for="user-name">שם/מזהה:</label>
+                <input type="text" id="user-name" required>
+            </div>
+            <button id="start-btn" class="btn btn-primary">התחל</button>
+        </div>
+
+        <!-- Question Screen -->
+        <div id="question-screen" class="screen">
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            <div class="question-number">
+                <span id="current-question">1</span> מתוך <span id="total-questions">7</span>
+            </div>
+            <div id="question-text" class="question-text"></div>
+            <div id="options-container" class="options-container"></div>
+            <div class="navigation">
+                <button id="prev-btn" class="btn">חזור</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen">
+            <h1>תוצאות</h1>
+            <div class="results-container">
+                <div class="score-display">
+                    <h2>הציון הכולל שלך:</h2>
+                    <div id="final-score" class="final-score">0</div>
+                </div>
+                <div class="therapist-message">
+                    <p>אנא הורד את קובץ ה-PDF ושתף אותו עם המטפל שלך לדיון בתוצאות.</p>
+                </div>
+                <div class="results-actions">
+                    <button id="export-json-btn" class="btn btn-primary">ייצא כ-JSON</button>
+                    <button id="export-pdf-btn" class="btn">ייצא כ-PDF</button>
+                    <button id="restart-btn" class="btn">התחל מחדש</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jsPDF library for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- html2canvas for rendering HTML to canvas (used with jsPDF) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF-AutoTable plugin for creating tables in PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- Questionnaire Configuration -->
+    <script>
+/**
+ * MGH Hair Pulling Scale questionnaire configuration
+ * Questions 3, 5, and 6 are reverse-scored (higher response = better control = lower severity)
+ */
+const questionnaireConfig = {
+    // Basic questionnaire information
+    title: "שאלון MGH לתלישת שיער",
+    instructions: "לכל שאלה, בחר את התשובה המתארת בצורה הטובה ביותר את ההתנהגויות ו/או הרגשות שלך בשבוע האחרון. אם היו לך עליות ומורדות, נסה להעריך ממוצע לשבוע האחרון.",
+    
+    // Styling configuration
+    fontFamily: 'HebrewFont',
+    fontPath: 'resources/FrankRuhlLibre.ttf',
+    
+    // Scoring configuration
+    scoringBase: 0,  // 0-based scoring (0-4)
+    
+    // Response options — shared across all questions
+    responseOptions: [
+        { value: 0, label: "כלל לא" },
+        { value: 1, label: "לפעמים" },
+        { value: 2, label: "לעיתים קרובות" },
+        { value: 3, label: "לעיתים קרובות מאוד" },
+        { value: 4, label: "כמעט תמיד" }
+    ],
+    
+    // Questions array
+    questions: [
+        {
+            id: "q1",
+            text: "באיזו תדירות הרגשת דחף לתלוש שיער?",
+            reverseScore: false
+        },
+        {
+            id: "q2",
+            text: "באיזו עוצמה הרגשת את הדחף לתלוש שיער?",
+            reverseScore: false
+        },
+        {
+            id: "q3",
+            text: "באיזו מידה הצלחת לשלוט בדחף לתלוש שיער?",
+            reverseScore: true
+        },
+        {
+            id: "q4",
+            text: "באיזו תדירות תלשת שיער בפועל?",
+            reverseScore: false
+        },
+        {
+            id: "q5",
+            text: "באיזו תדירות ניסית להתנגד לדחף לתלוש שיער?",
+            reverseScore: true
+        },
+        {
+            id: "q6",
+            text: "באיזו מידה הצלחת לעצור את תלישת השיער בפועל?",
+            reverseScore: true
+        },
+        {
+            id: "q7",
+            text: "באיזו מידה גרמה לך תלישת השיער לאי-נוחות, עצב או תחושת עצבנות?",
+            reverseScore: false
+        }
+    ]
+};
+    </script>
+    
+    <script src="resources/questionnaire.js"></script>
+</body>
+</html>
